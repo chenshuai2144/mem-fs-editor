@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./lib",
     "test": "jest",
-    "prettier": "prettier -c --write \"**/*\""
+    "prettier": "prettier -c --write \"**/*\"",
+    "prepublishOnly": "npm run test  && np --no-cleanup --yolo --no-publish --any-branch"
   },
   "repository": "chenshuai2144/mem-fs-editor",
   "author": "Simon Boudrias",
