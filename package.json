@@ -7,7 +7,7 @@
     "test": "jest",
     "prettier": "prettier -c --write \"**/*\""
   },
-  "repository": "SBoudrias/mem-fs-editor",
+  "repository": "chenshuai2144/mem-fs-editor",
   "author": "Simon Boudrias",
   "license": "MIT",
   "main": "lib/index.js",
