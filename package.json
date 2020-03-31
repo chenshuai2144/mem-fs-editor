@@ -1,11 +1,12 @@
 {
-  "name": "mem-fs-editor",
+  "name": "@umijs/mem-fs-editor",
   "version": "6.0.0",
   "description": "File edition helpers working on top of mem-fs",
   "scripts": {
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./lib",
     "test": "jest",
-    "prettier": "prettier -c --write \"**/*\""
+    "prettier": "prettier -c --write \"**/*\"",
+    "prepublishOnly": "npm run test  && np --no-cleanup --yolo --no-publish --any-branch"
   },
   "repository": "SBoudrias/mem-fs-editor",
   "author": "Simon Boudrias",
@@ -29,6 +30,7 @@
     "vinyl": "^2.2.0"
   },
   "devDependencies": {
+    "np": "^6.2.0",
     "@umijs/fabric": "^2.0.7",
     "coveralls": "^3.0.3",
     "escape-regexp": "0.0.1",
