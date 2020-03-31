@@ -1,6 +1,6 @@
 {
   "name": "@umijs/mem-fs-editor",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "description": "File edition helpers working on top of mem-fs",
   "scripts": {
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./lib",
