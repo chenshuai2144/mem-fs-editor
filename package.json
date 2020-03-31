@@ -1,6 +1,6 @@
 {
   "name": "@umijs/mem-fs-editor",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "File edition helpers working on top of mem-fs",
   "scripts": {
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./lib",
@@ -30,7 +30,6 @@
     "vinyl": "^2.2.0"
   },
   "devDependencies": {
-    "np": "^6.2.0",
     "@umijs/fabric": "^2.0.7",
     "coveralls": "^3.0.3",
     "escape-regexp": "0.0.1",
@@ -38,6 +37,7 @@
     "eslint-config-xo-space": "^0.21.0",
     "jest": "^24.8.0",
     "mem-fs": "^1.0.0",
+    "np": "^6.2.0",
     "prettier": "^2.0.2",
     "sinon": "^8.0.0"
   },
