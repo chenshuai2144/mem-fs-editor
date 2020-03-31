@@ -1,8 +1,8 @@
-'use strict';
-
+/* eslint-disable import/no-extraneous-dependencies */
 const filesystem = require('fs');
 const path = require('path');
 const sinon = require('sinon');
+const slash = require('slash2');
 const util = require('../lib/util');
 
 describe('util.getCommonPath()', () => {
@@ -40,38 +40,35 @@ describe('util.getCommonPath()', () => {
 
 describe('util.globify()', () => {
   it('returns path for file path', () => {
-    const filePath = path.resolve(__dirname, 'fixtures/file-a.txt');
+    const filePath = slash(path.resolve(__dirname, 'fixtures/file-a.txt'));
     expect(util.globify(filePath)).toBe(filePath);
   });
 
   it('returns pattern matching both files and directory for nonexisting paths', () => {
     const filePath = '/nonexisting.file';
-    expect(util.globify(filePath)).toEqual([
-      filePath,
-      path.join(filePath, '**')
-    ]);
+    expect(util.globify(filePath)).toEqual([slash(filePath), slash(path.join(filePath, '**'))]);
   });
 
   it('returns glob for glob path', () => {
-    const filePath = path.resolve(__dirname, 'fixtures/*.txt');
+    const filePath = slash(path.resolve(__dirname, 'fixtures/*.txt'));
     expect(util.globify(filePath)).toBe(filePath);
 
-    const filePath2 = path.resolve(__dirname, 'fixtures/file-{a,b}.txt');
+    const filePath2 = slash(path.resolve(__dirname, 'fixtures/file-{a,b}.txt'));
     expect(util.globify(filePath2)).toBe(filePath2);
   });
 
   it('returns globified path for directory path', () => {
-    const filePath = path.resolve(__dirname, 'fixtures/nested');
-    expect(util.globify(filePath)).toBe(path.join(filePath, '**'));
+    const filePath = slash(path.resolve(__dirname, 'fixtures/nested'));
+    expect(util.globify(filePath)).toBe(slash(path.join(filePath, '**')));
   });
 
   it('throws if target path is neither a file or a directory', () => {
     sinon.stub(filesystem, 'statSync').returns({
       isFile: () => false,
-      isDirectory: () => false
+      isDirectory: () => false,
     });
 
-    const filePath = path.resolve(__dirname, 'fixtures/file-a.txt');
+    const filePath = slash(path.resolve(__dirname, 'fixtures/file-a.txt'));
     expect(util.globify.bind(util, filePath)).toThrow();
 
     filesystem.statSync.restore();

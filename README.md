@@ -5,13 +5,13 @@ File edition helpers working on top of [mem-fs](https://github.com/SBoudrias/mem
 ## Usage
 
 ```js
-var memFs = require("mem-fs");
-var editor = require("mem-fs-editor");
+var memFs = require('mem-fs');
+var editor = require('mem-fs-editor');
 
 var store = memFs.create();
 var fs = editor.create(store);
 
-fs.write("somefile.js", "var a = 1;");
+fs.write('somefile.js', 'var a = 1;');
 ```
 
 ### `#read(filepath, [options])`

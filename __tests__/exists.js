@@ -1,8 +1,7 @@
-'use strict';
-
+/* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
-const editor = require('..');
 const memFs = require('mem-fs');
+const editor = require('..');
 
 const fileA = path.join(__dirname, 'fixtures/file-a.txt');
 const fileDelete = path.join(__dirname, 'fixtures/deleteAfter');
@@ -16,7 +15,7 @@ describe('#exists()', () => {
     fs = editor.create(store);
   });
 
-  it('file doesn\'t exist', () => {
+  it("file doesn't exist", () => {
     expect(fs.exists('something that doesnt exist')).toBeFalsy();
   });
 
@@ -25,7 +24,7 @@ describe('#exists()', () => {
     expect(fs.exists(fileA)).toBeTruthy();
   });
 
-  it('file doesn\'t exist after delete', () => {
+  it("file doesn't exist after delete", () => {
     fs.write(fileDelete, 'some content');
     fs.delete(fileDelete);
     expect(fs.exists(fileDelete)).toBeFalsy();

@@ -1,8 +1,7 @@
-'use strict';
-
+/* eslint-disable import/no-extraneous-dependencies */
+const memFs = require('mem-fs');
 const path = require('path');
 const editor = require('..');
-const memFs = require('mem-fs');
 
 describe('#write()', () => {
   let store;

@@ -1,11 +1,11 @@
-'use strict';
-
+/* eslint-disable import/no-extraneous-dependencies */
 const filesystem = require('fs');
 const os = require('os');
 const path = require('path');
 const sinon = require('sinon');
-const editor = require('..');
 const memFs = require('mem-fs');
+const slash = require('slash2');
+const editor = require('..');
 
 describe('#copy()', () => {
   let store;
@@ -17,7 +17,7 @@ describe('#copy()', () => {
   });
 
   it('copy file', () => {
-    const filepath = path.join(__dirname, 'fixtures/file-a.txt');
+    const filepath = slash(path.join(__dirname, 'fixtures/file-a.txt'));
     const initialContents = fs.read(filepath);
     const newPath = '/new/path/file.txt';
     fs.copy(filepath, newPath);
@@ -26,8 +26,8 @@ describe('#copy()', () => {
   });
 
   it('can copy directory not commited to disk', () => {
-    let sourceDir = path.join(__dirname, '../test/foo');
-    let destDir = path.join(__dirname, '../test/bar');
+    const sourceDir = path.join(__dirname, '../test/foo');
+    const destDir = path.join(__dirname, '../test/bar');
     fs.write(path.join(sourceDir, 'file-a.txt'), 'a');
     fs.write(path.join(sourceDir, 'file-b.txt'), 'b');
 
@@ -53,60 +53,53 @@ describe('#copy()', () => {
         expect(contentsArg).toBeInstanceOf(Buffer);
         expect(contentsArg.toString()).toEqual(initialContents);
         return contents;
-      }
+      },
     });
     expect(fs.read(newPath)).toBe(contents);
   });
 
   it('copy by directory', () => {
-    let outputDir = path.join(__dirname, '../test/output');
+    const outputDir = slash(path.join(__dirname, '../test/output'));
     fs.copy(path.join(__dirname, '/fixtures'), outputDir);
-    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe('foo' + os.EOL);
-    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe('nested' + os.EOL);
+    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe(`foo\n`);
+    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe(`nested\n`);
   });
 
   it('copy by globbing', () => {
-    let outputDir = path.join(__dirname, '../test/output');
+    const outputDir = slash(path.join(__dirname, '../test/output'));
     fs.copy(path.join(__dirname, '/fixtures/**'), outputDir);
-    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe('foo' + os.EOL);
-    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe('nested' + os.EOL);
+    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe(`foo\n`);
+    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe(`nested\n`);
   });
 
   it('copy by globbing multiple patterns', () => {
-    let outputDir = path.join(__dirname, '../test/output');
+    const outputDir = slash(path.join(__dirname, '../test/output'));
     fs.copy([path.join(__dirname, '/fixtures/**'), '!**/*tpl*'], outputDir);
-    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe('foo' + os.EOL);
-    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe('nested' + os.EOL);
+    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe(`foo\n`);
+    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe(`nested\n`);
     expect(fs.read.bind(fs, path.join(outputDir, 'file-tpl.txt'))).toThrow();
   });
 
   it('copy files by globbing and process contents', () => {
-    let outputDir = path.join(__dirname, '../test/output');
+    const outputDir = slash(path.join(__dirname, '../test/output'));
     const process = sinon.stub().returnsArg(0);
-    fs.copy(path.join(__dirname, '/fixtures/**'), outputDir, {process});
+    fs.copy(path.join(__dirname, '/fixtures/**'), outputDir, { process });
     sinon.assert.callCount(process, 8); // 7 total files under 'fixtures', not counting folders
-    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe('foo' + os.EOL);
-    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe('nested' + os.EOL);
+    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe(`foo\n`);
+    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe(`nested\n`);
   });
 
   it('accepts directory name with "."', () => {
-    let outputDir = path.join(__dirname, '../test/out.put');
+    const outputDir = slash(path.join(__dirname, '../test/out.put'));
     fs.copy(path.join(__dirname, '/fixtures/**'), outputDir);
-    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe('foo' + os.EOL);
-    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe('nested' + os.EOL);
+    expect(fs.read(path.join(outputDir, 'file-a.txt'))).toBe(`foo\n`);
+    expect(fs.read(path.join(outputDir, '/nested/file.txt'))).toBe(`nested\n`);
   });
 
   it('accepts template paths', () => {
-    let outputFile = path.join(__dirname, 'test/<%= category %>/file-a.txt');
-    fs.copy(
-      path.join(__dirname, '/fixtures/file-a.txt'),
-      outputFile,
-      {},
-      {category: 'foo'}
-    );
-    expect(
-      fs.read(path.join(__dirname, 'test/foo/file-a.txt'))
-    ).toBe('foo' + os.EOL);
+    const outputFile = slash(path.join(__dirname, 'test/<%= category %>/file-a.txt'));
+    fs.copy(path.join(__dirname, '/fixtures/file-a.txt'), outputFile, {}, { category: 'foo' });
+    expect(fs.read(path.join(__dirname, 'test/foo/file-a.txt'))).toBe(`foo\n`);
   });
 
   it('requires destination directory when globbing', () => {
@@ -114,15 +107,15 @@ describe('#copy()', () => {
       fs.copy.bind(
         fs,
         path.join(__dirname, '/fixtures/**'),
-        path.join(__dirname, '/fixtures/file-a.txt')
-      )
+        path.join(__dirname, '/fixtures/file-a.txt'),
+      ),
     ).toThrow();
   });
 
-  it('preserve permissions', done => {
-    const filename = path.join(os.tmpdir(), 'perm.txt');
-    const copyname = path.join(os.tmpdir(), 'copy-perm.txt');
-    filesystem.writeFileSync(filename, 'foo', {mode: parseInt(733, 8)});
+  it('preserve permissions', (done) => {
+    const filename = slash(path.join(os.tmpdir(), 'perm.txt'));
+    const copyname = slash(path.join(os.tmpdir(), 'copy-perm.txt'));
+    filesystem.writeFileSync(filename, 'foo', { mode: parseInt(733, 8) });
 
     fs.copy(filename, copyname);
 

@@ -1,9 +1,8 @@
-'use strict';
-
-const os = require('os');
+/* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
-const editor = require('..');
 const memFs = require('mem-fs');
+const slash = require('slash2');
+const editor = require('..');
 
 describe('#copyTpl()', () => {
   let store;
@@ -17,35 +16,40 @@ describe('#copyTpl()', () => {
   it('copy file and process contents as underscore template', () => {
     const filepath = path.join(__dirname, 'fixtures/file-tpl.txt');
     const newPath = '/new/path/file.txt';
-    fs.copyTpl(filepath, newPath, {name: 'new content'});
-    expect(fs.read(newPath)).toBe('new content' + os.EOL);
+    fs.copyTpl(filepath, newPath, { name: 'new content' });
+    expect(fs.read(newPath)).toBe(`new content\n`);
   });
 
   it('allow setting custom template delimiters', function () {
     const filepath = path.join(__dirname, 'fixtures/file-tpl-custom-delimiter.txt');
     const newPath = '/new/path/file.txt';
-    fs.copyTpl(filepath, newPath, {name: 'mustache'}, {
-      delimiter: '?'
-    });
-    expect(fs.read(newPath)).toBe('mustache' + os.EOL);
+    fs.copyTpl(
+      filepath,
+      newPath,
+      { name: 'mustache' },
+      {
+        delimiter: '?',
+      },
+    );
+    expect(fs.read(newPath)).toBe(`mustache\n`);
   });
 
   it('allow including partials', function () {
     const filepath = path.join(__dirname, 'fixtures/file-tpl-include.txt');
     const newPath = '/new/path/file.txt';
     fs.copyTpl(filepath, newPath);
-    expect(fs.read(newPath)).toBe('partial' + os.EOL + os.EOL);
+    expect(fs.read(newPath)).toBe(`partial\n\n`);
   });
 
   it('allow including glob options', function () {
     const filenames = [
       path.join(__dirname, 'fixtures/file-tpl-partial.txt'),
-      path.join(__dirname, 'fixtures/file-tpl.txt')
+      path.join(__dirname, 'fixtures/file-tpl.txt'),
     ];
     const copyOptions = {
       globOptions: {
-        ignore: [filenames[1]]
-      }
+        ignore: [slash(filenames[1])],
+      },
     };
     const newPath = '/new/path';
     fs.copyTpl(filenames, newPath, {}, {}, copyOptions);
